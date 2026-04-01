@@ -16,6 +16,7 @@ Edge AI Microservice, for Object Detection and LLM Analysis using the Google Cor
 
 ## **System Architecture**
 <img width="" height="" alt="" src="" />
+
 ## **Flowchart**
 <img width="" height="" alt="" src="" />
   
