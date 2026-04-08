@@ -2,7 +2,7 @@
 Edge AI Microservice, for Object Detection and LLM Analysis using the Google Coral Dev Board.
 ## **Subject: ICT740, 2026**
 ## **Group03**
-
+Quick Note --> To set up Coral Dev Board integration with the camera detection logic, please follow this git repo [https://github.com/PPipat2002/Dev-board-Coral]
 ## **Member**
 |No.| Name                                | ID               | email |
 |---|------------------------------------|-------------------|-------|
