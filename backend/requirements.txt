@@ -3,3 +3,6 @@ uvicorn
 httpx
 python-multipart
 pydantic-settings
+google-genai
+google-generativeai
+pymongo

@@ -26,9 +26,11 @@ Thumbs.db
 # --- Project Specific (Storage) ---
 # ละเว้นไฟล์รูปภาพทั้งหมดในโฟลเดอร์เก็บข้อมูล
 backend/received_images/*
+backend/images/*
 
 # แต่ห้ามละเว้นไฟล์ .gitignore ของโฟลเดอร์นั้น (เพื่อรักษาโครงสร้าง Directory ไว้ใน Git)
 !backend/received_images/.gitignore
+!backend/images/.gitignore
 
 # --- IDE Specific ---
 .vscode/
