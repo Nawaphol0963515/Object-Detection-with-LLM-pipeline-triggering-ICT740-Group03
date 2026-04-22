@@ -33,3 +33,5 @@ backend/received_images/*
 # --- IDE Specific ---
 .vscode/
 .idea/
+
+backend/.env
