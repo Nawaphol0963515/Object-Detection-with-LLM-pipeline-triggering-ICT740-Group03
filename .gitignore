@@ -1,0 +1,35 @@
+# --- Python Specific ---
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# --- Database & Logs ---
+*.log
+*.sqlite3
+.db
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+.dockerignore
+
+# --- Project Specific (Storage) ---
+# ละเว้นไฟล์รูปภาพทั้งหมดในโฟลเดอร์เก็บข้อมูล
+backend/received_images/*
+
+# แต่ห้ามละเว้นไฟล์ .gitignore ของโฟลเดอร์นั้น (เพื่อรักษาโครงสร้าง Directory ไว้ใน Git)
+!backend/received_images/.gitignore
+
+# --- IDE Specific ---
+.vscode/
+.idea/
