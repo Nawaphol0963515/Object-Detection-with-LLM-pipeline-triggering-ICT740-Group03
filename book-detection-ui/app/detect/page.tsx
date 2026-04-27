@@ -12,28 +12,43 @@ type ImageInfo = {
 
 export default function Home() {
   const [images, setImages] = useState<ImageInfo[]>([]);
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const router = useRouter();
 
   const fetchImages = async () => {
-    const res = await fetch(`${API}/images`);
+    const res = await fetch(`${API}/api/images`);
     const data = await res.json();
-    setImages(data);
+
+    if (Array.isArray(data)) {
+      setImages(data);
+    } else {
+      setImages([]);
+    }
+
+    setLastUpdate(new Date());
+  };
+
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+
+    const pad = (n: number) => n.toString().padStart(2, "0");
+
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} 
+  ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
   };
 
   useEffect(() => {
     fetchImages();
-    const interval = setInterval(fetchImages, 3000);
+
+    const interval = setInterval(fetchImages, 5000); // ✅ ทุก 5 วิ
+
     return () => clearInterval(interval);
   }, []);
 
-  const handleResume = async () => {
-    const res = await fetch(`${API}/resume`, { method: "POST" });
-    const data = await res.json();
-    alert(data.message);
-  };
-
   return (
     <div className="min-h-screen bg-pink-50 p-6">
+
+      {/* 🔙 BACK */}
       <div className="mb-4">
         <button
           onClick={() => router.push("/")}
@@ -43,32 +58,22 @@ export default function Home() {
         </button>
       </div>
 
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-pink-600">
-            📷 Detection Log
-          </h1>
-        </div>
-
-        <div className="flex gap-3">
-          <button
-            onClick={handleResume}
-            className="bg-pink-500 hover:bg-pink-600 text-white px-5 py-2 rounded-xl shadow"
-          >
-            ▶ Resume Detection
-          </button>
-
-          <button
-            onClick={fetchImages}
-            className="bg-white border border-pink-300 text-pink-600 px-5 py-2 rounded-xl shadow hover:bg-pink-50"
-          >
-            🔄 Refresh
-          </button>
-        </div>
+      {/* 🧾 HEADER */}
+      <div className="flex justify-between items-center mb-2">
+        <h1 className="text-3xl font-bold text-pink-600">
+          📷 Detection Log
+        </h1>
       </div>
 
-      {/* COUNT */}
+      {/* 🔄 STATUS */}
+      <div className="text-sm text-gray-400 mb-4 flex justify-between">
+        <span>🔄 Auto updating every 5 seconds</span>
+        <span>
+          {lastUpdate && `Last updated: ${lastUpdate.toLocaleTimeString()}`}
+        </span>
+      </div>
+
+      {/* 📊 COUNT */}
       <div className="bg-white p-4 rounded-xl shadow border border-pink-100 mb-6">
         <p className="text-sm text-gray-500">Total Images</p>
         <h2 className="text-2xl font-bold text-pink-600">
@@ -76,28 +81,34 @@ export default function Home() {
         </h2>
       </div>
 
-      {/* GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      {/* 🖼️ GRID */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-        {[...images].reverse().map((img) => (
+        {images.length === 0 && (
+          <p className="col-span-full text-center text-gray-400">
+            No images...
+          </p>
+        )}
+
+        {[...images].map((img, index) => (
           <div
             key={img.filename}
-            className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden border border-pink-100"
+            className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition duration-300 overflow-hidden border border-pink-100 hover:scale-[1.02]"
           >
-            {/* IMAGE */}
-            <img
-              src={`${API}/image/${img.filename}`}
-              className="w-full h-48 object-cover"
-            />
+            <div className="relative">
+              <img
+                src={`${API}/image/${img.filename}`}
+                className="w-full h-48 object-cover"
+              />
+            </div>
 
-            {/* INFO */}
-            <div className="p-3 text-sm text-gray-500">
-              <p className="truncate">{img.filename}</p>
-              <p className="text-xs mt-1">
-                📅 {img.timestamp}
+            <div className="p-3 text-sm">
+              <p className="font-semibold text-gray-700 truncate">
+                {img.filename}
               </p>
-              <p className="text-xs text-gray-400">
-                {img.size_kb} KB
+
+              <p className="text-xs text-gray-400 mt-1">
+                📅 {formatDate(img.timestamp)}
               </p>
             </div>
           </div>
@@ -105,24 +116,5 @@ export default function Home() {
 
       </div>
     </div>
-
-    // <main style={{ background: "#0f0f23", color: "#eee", minHeight: "100vh", padding: 20 }}>
-    //   <h1 style={{ textAlign: "center", color: "#00d4ff" }}>Book Detection Server</h1>
-    //   <div style={{ textAlign: "center", margin: 20 }}>
-    //     <button onClick={handleResume}>Resume Detection</button>
-    //     <button onClick={fetchImages}>Refresh</button>
-    //   </div>
-    //   <p style={{ textAlign: "center" }}>Total images: {images.length}</p>
-    //   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 15 }}>
-    //     {[...images].reverse().map((img) => (
-    //       <div key={img.filename} style={{ background: "#1a1a3e", borderRadius: 8, overflow: "hidden" }}>
-    //         <img src={`${API}/image/${img.filename}`} style={{ width: "100%" }} />
-    //         <div style={{ padding: 10, fontSize: 13, color: "#aaa" }}>
-    //           {img.timestamp} — {img.size_kb} KB
-    //         </div>
-    //       </div>
-    //     ))}
-    //   </div>
-    // </main>
   );
 }

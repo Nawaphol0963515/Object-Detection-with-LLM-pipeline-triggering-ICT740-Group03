@@ -3,100 +3,123 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
+const API = "http://localhost:8000";
+
+type Book = {
+  id: string;
+  title: string;
+  author: string;
+  genre: string;
+  keywords: string[];
+  language: string;
+  summary: string;
+  image: string;
+  timestamp: string;
+};
+
 export default function BookDetail() {
   const { id } = useParams();
   const router = useRouter();
 
-  const [book, setBook] = useState<any>(null);
-  const [selectedImage, setSelectedImage] = useState("");
+  const [book, setBook] = useState<Book | null>(null);
 
   useEffect(() => {
-    if (!id) return;
-
     const fetchBook = async () => {
-      const res = await fetch(`http://127.0.0.1:8000/api/books/${id}`);
+      const res = await fetch(`${API}/api/books/${id}`);
       const data = await res.json();
-
       setBook(data);
-
-      // default = รูปแรก
-      if (data.images && data.images.length > 0) {
-        setSelectedImage(data.images[0]);
-      } else {
-        setSelectedImage(data.image);
-      }
     };
 
     fetchBook();
   }, [id]);
 
-  if (!book) return <p className="p-6">Loading...</p>;
+  if (!book) {
+    return <div className="p-10 text-center">Loading...</div>;
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 p-6">
+    <div className="min-h-screen bg-pink-50 p-6">
 
-      {/* BACK */}
-      <div className="mb-6 flex items-center gap-2 text-gray-600">
-        <button
-          onClick={() => router.push("/")}
-          className="hover:text-black"
-        >
-          ← Back
-        </button>
+      {/* 🔙 BACK BUTTON (outside card) */}
+      <button
+        onClick={() => router.push("/")}
+        className="mb-6 bg-white border border-pink-300 text-pink-600 px-5 py-2 rounded-xl shadow hover:bg-pink-100 transition"
+      >
+        ← Back
+      </button>
 
-        <span className="text-gray-400">•</span>
+      {/* 🧾 MAIN CARD */}
+      <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-xl border border-pink-100 p-10 flex gap-10">
 
-        <span className="font-medium text-gray-800">
-          {book.title}
-        </span>
-      </div>
-
-      {/* MAIN */}
-      <div className="flex gap-10">
-
-        {/* LEFT */}
-        <div className="flex gap-4">
-
-          {/* BIG IMAGE */}
+        {/* 📷 LEFT: IMAGE */}
+        <div className="w-1/2 flex justify-center items-center">
           <img
-            src={selectedImage || "https://via.placeholder.com/500"}
-            className="w-[420px] h-auto rounded-xl shadow-lg"
+            src={`${API}${book.image}`}
+            className="rounded-2xl shadow-lg max-h-[600px] object-contain"
           />
-
-          {/* THUMBNAILS */}
-          <div className="flex flex-col gap-4">
-            {(book.images || [book.image]).map((img: string, index: number) => (
-              <img
-                key={index}
-                src={img || "https://via.placeholder.com/100"}
-                onClick={() => setSelectedImage(img)}
-                className={`w-24 h-auto rounded-lg shadow cursor-pointer transition
-                  ${selectedImage === img
-                    ? "ring-4 ring-indigo-400"
-                    : "opacity-70 hover:opacity-100"
-                  }
-                `}
-              />
-            ))}
-          </div>
-
         </div>
 
-        {/* RIGHT */}
-        <div className="max-w-xl">
+        {/* 📄 RIGHT: INFO */}
+        <div className="w-1/2 flex flex-col">
 
-          <h1 className="text-4xl font-bold text-gray-900 leading-tight">
+          {/* TITLE */}
+          <h1 className="text-4xl font-bold text-pink-600 mb-2">
             {book.title}
           </h1>
 
-          <p className="text-xl text-gray-600 mt-2">
+          {/* AUTHOR */}
+          <p className="text-gray-600 mb-4 text-lg">
             {book.author}
           </p>
 
-          <p className="mt-6 text-gray-600 leading-relaxed text-lg">
-            {book.summary || book.content || "ไม่มีคำอธิบาย"}
-          </p>
+          {/* LINE */}
+          <div className="h-[2px] bg-pink-200 mb-6 rounded-full" />
 
+          {/* INFO BOX */}
+          <div className="bg-pink-50 rounded-2xl p-6 shadow-sm border border-pink-100 space-y-3">
+
+            <p>
+              <span className="font-semibold text-pink-500">📅 Date:</span>{" "}
+              {book.timestamp?.replace("T", " ").slice(0, 19)}
+            </p>
+
+            <p>
+              <span className="font-semibold text-pink-500">📚 Genre:</span>{" "}
+              {book.genre || "-"}
+            </p>
+
+            <p>
+              <span className="font-semibold text-pink-500">🌐 Language:</span>{" "}
+              {book.language || "-"}
+            </p>
+
+            {/* KEYWORDS */}
+            <div>
+              <p className="font-semibold text-pink-500 mb-2">
+                🏷 Keywords
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {book.keywords?.map((k, i) => (
+                  <span
+                    key={i}
+                    className="bg-white border border-pink-300 text-pink-600 px-3 py-1 rounded-full text-sm"
+                  >
+                    {k}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* SUMMARY */}
+          <div className="mt-6">
+            <p className="font-semibold text-pink-500 mb-2 text-lg">
+              📖 Summary
+            </p>
+            <p className="text-gray-600 leading-relaxed">
+              {book.summary}
+            </p>
+          </div>
         </div>
       </div>
     </div>

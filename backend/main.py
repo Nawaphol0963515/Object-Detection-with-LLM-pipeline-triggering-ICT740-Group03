@@ -368,7 +368,6 @@ async def get_latest_books():
         })
     return books
 
-
 @app.get("/api/books/{book_id}")
 async def get_book(book_id: str):
     raw = raw_collection.find_one({"_id": book_id})
@@ -401,6 +400,22 @@ async def get_book(book_id: str):
 async def serve_image(filename: str):
     return FileResponse(os.path.join(IMAGE_DIR, filename))
 
+@app.get("/api/images")
+async def get_images():
+    results = list(raw_collection.find().sort("timestamp", -1).limit(20))
+
+    images = []
+    for item in results:
+        stored = item.get("image_path", "")
+        filename = os.path.basename(stored) if stored else ""
+
+        images.append({
+            "filename": filename,
+            "timestamp": item.get("timestamp", ""),
+            "size_kb": 0  # ยังไม่มี ก็ใส่ 0 ไปก่อน
+        })
+
+    return images
 
 # ============================================================
 # DEBUG: test Gemini without Coral

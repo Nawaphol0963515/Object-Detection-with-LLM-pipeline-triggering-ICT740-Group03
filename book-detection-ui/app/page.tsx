@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type Book = {
-  id: number;
+  id: string;
   title: string;
   author: string;
   timestamp: string;
@@ -20,7 +20,6 @@ export default function Home() {
     const fetchData = async () => {
       const res = await fetch("http://127.0.0.1:8000/api/books");
       const data = await res.json();
-
       if (Array.isArray(data)) {
         setBooks(data);
       } else {
@@ -42,6 +41,15 @@ export default function Home() {
 
     return matchTitle && matchDate;
   });
+
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+
+    const pad = (n: number) => n.toString().padStart(2, "0");
+
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} 
+  ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  };
 
   return (
     <div className="min-h-screen bg-pink-50 p-6">
@@ -146,7 +154,7 @@ export default function Home() {
 
               {book.timestamp && (
                 <p className="text-xs text-gray-400 mt-1">
-                  📅 {book.timestamp}
+                  📅 {formatDate(book.timestamp)}
                 </p>
               )}
             </div>
