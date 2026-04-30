@@ -13,17 +13,17 @@ Quick Note --> To set up Coral Dev Board integration with the camera detection l
 |3.| Ploypilin Prutpinit| 6814552833 | ploy8608@gmail.com |
 ## **Overview:**
 
-## **Objective**
+## **Objective:**
 
-## **System Architecture**
+## **System Architecture:**
 <img width="" height="" alt="" src="" />
 
-## **Flowchart**
+## **Flowchart:**
 <img width="" height="" alt="" src="" />
   
-## **Materials**
+## **Materials:**
 
-## **Demonstration**
+## **Demonstration:**
 For full demonstration please visit this YouTube link --> [https://www.youtube.com/watch?v=HoLkAScV__A&feature=youtu.be]
 
-## **Conclusion**
+## **Conclusion:**
