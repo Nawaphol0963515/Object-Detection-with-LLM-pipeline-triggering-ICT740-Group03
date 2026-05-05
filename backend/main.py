@@ -72,7 +72,7 @@ app.add_middleware(
 # IMAGE_PATH_PREFIX is what we STORE in MongoDB (must match your schema).
 IMAGE_DIR = "images"
 IMAGE_PATH_PREFIX = "backend/images"   # <-- stored in DB exactly like this
-CORAL_URL = os.getenv("CORAL_URL", "http://192.168.137.77:5000")
+CORAL_URL = os.getenv("CORAL_URL", "http://192.168.137.77:5000") # Change the IP to be your specific IP in your WIFI usage. (Use ipconfig for Windows and ifconfig for Unix-like OS (eg. Linux, macOS and etc.)
 os.makedirs(IMAGE_DIR, exist_ok=True)
 
 # Expose images to the frontend via URL
